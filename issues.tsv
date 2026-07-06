@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# issues.tsv — tab-separated: week<TAB>type<TAB>title<TAB>body
+# type is one of: backend, infra, frontend, testing, docs
+# Edit freely before running create_issues.sh
+
+W1	infra	Set up repo, Spring Boot 3 + Java 17 skeleton	Initialize Spring Boot project (Java 17), set up Docker Compose with Postgres, configure application.yml profiles (local/test).
+W1	infra	Add Flyway baseline migration	Configure Flyway, write V1__init.sql creating the schema baseline.
+W1	backend	Create User and Application entities + repositories	Define JPA entities, Spring Data repositories, basic mapping (no auth yet).
+W1	backend	Basic CRUD endpoints for Application	Controller + service for create/read/update/delete on Application, no security yet.
+W2	backend	Implement Spring Security + JWT	Register/login endpoints, password hashing, JWT issuing and validation filter.
+W2	backend	Add role-based access (USER/ADMIN)	Secure existing endpoints by role, add @PreAuthorize where relevant.
+W2	testing	First Testcontainers integration test	Set up Testcontainers Postgres module, write integration test for ApplicationRepository.
+W3	backend	Add Interview, Tag, ResumeVersion entities	Define relationships: Application 1-to-many Interview, many-to-many Tag, 1-to-many ResumeVersion.
+W3	backend	Build Application status state machine	Service enforcing legal status transitions (APPLIED -> INTERVIEWING -> OFFER/REJECTED), domain exception on illegal transition.
+W3	backend	Add global exception handling	@ControllerAdvice mapping domain exceptions to proper HTTP status + error body.
+W3	testing	Unit tests for state machine service	Mockito-based unit tests covering legal and illegal transitions.
+W4	backend	Add pagination/sorting/filtering to Application list endpoint	Use Pageable + Specifications for filtering by status, date range, tag.
+W4	backend	Build dashboard aggregation endpoint	Handwritten JPQL/native query for counts by status and response rate; inspect generated SQL for N+1 awareness.
+W4	docs	Add OpenAPI/Swagger documentation	Configure springdoc-openapi, annotate key endpoints.
+W5	infra	Add MinIO to docker-compose	Configure MinIO container, create bucket, wire S3 SDK client config in Spring.
+W5	backend	Implement resume upload/download endpoints	ResumeVersion upload to MinIO, download/list endpoints, versioning per application.
+W5	testing	Testcontainers test for storage flow	If feasible, use MinIO Testcontainers module to test upload/download round-trip.
+W6	infra	Add RabbitMQ to docker-compose + Spring AMQP config	Set up exchange/queue/binding config, connection in application.yml.
+W6	backend	Build email-ingestion publish endpoint	REST endpoint accepting pasted email body, publishes event message to RabbitMQ.
+W6	backend	Build consumer skeleton	Basic consumer that logs and acks messages, no parsing logic yet.
+W7	backend	Build email parsing chain (Chain of Responsibility)	EmailParseStep interface, ordered chain: RejectionKeywordStep, InterviewInviteStep, fallback step.
+W7	backend	Wire consumer to apply parsed result	Consumer updates Application status based on parse chain result.
+W7	backend	Add dead-letter queue for unparseable messages	Configure DLQ, route failed/unmatched messages there.
+W7	testing	Testcontainers test for consumer logic	RabbitMQ Testcontainers module, test publish -> consume -> status update flow.
+W8	backend	Implement scheduled reminder job	@Scheduled job scanning upcoming interviews, writes to Notification table.
+W8	frontend	Angular project setup + auth flow	Standalone components, login/register pages, JWT HTTP interceptor, routing skeleton.
+W9	frontend	Build applications list/board view	Table or kanban board, wired to backend pagination/filtering.
+W9	frontend	Build application detail view	Shows interviews, resume versions, tags for a single application.
+W10	frontend	Build resume upload UI	Upload form, version list display.
+W10	frontend	Build notifications display	Surface scheduled reminders in the UI.
+W10	infra	Set up GitHub Actions CI	Backend test job (mvn/gradle test), Angular build/lint job, run on push.
+W10	testing	Fill test coverage gaps	Review coverage report, add missing unit/integration tests identified during the build.
+W11	infra	Choose and configure deploy platform	Set up Railway or Fly.io project, configure environment variables/secrets.
+W11	infra	Deploy full stack (app, Postgres, RabbitMQ, MinIO)	Get all services live, resolve networking/config issues, verify end-to-end.
+W12	docs	Write architecture diagram	Visual diagram of services, data flow, async pipeline.
+W12	docs	Write README with setup instructions	Local docker-compose setup, env vars, how to run tests, link to live deploy.
+W12	docs	Write decisions & tradeoffs section	Document key choices (state machine vs enum, RabbitMQ vs @Async, Specifications vs QueryDSL, etc.) with reasoning.
+W12	docs	Prep interview talking points	Write out answers to likely questions: challenging feature, what you'd change at scale, testing strategy.
