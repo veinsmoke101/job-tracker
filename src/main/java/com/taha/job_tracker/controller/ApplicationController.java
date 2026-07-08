@@ -2,6 +2,7 @@ package com.taha.job_tracker.controller;
 
 import com.taha.job_tracker.dto.ApplicationRequest;
 import com.taha.job_tracker.dto.ApplicationResponse;
+import com.taha.job_tracker.entity.ApplicationStatus;
 import com.taha.job_tracker.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,12 @@ public class ApplicationController {
             @RequestHeader("X-User-Id") UUID userId) {
         applicationService.delete(userId, id);
         return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApplicationResponse> updateStatus(
+            @PathVariable UUID id,
+            @RequestParam ApplicationStatus status,
+            @RequestHeader("X-User-Id") UUID userId) {
+        return ResponseEntity.ok(applicationService.updateStatus(userId, id, status));
     }
 }

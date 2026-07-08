@@ -12,6 +12,7 @@ import com.taha.job_tracker.mapper.ApplicationMapper;
 import com.taha.job_tracker.repository.ApplicationRepository;
 import com.taha.job_tracker.repository.TagRepository;
 import com.taha.job_tracker.repository.UserRepository;
+import com.taha.job_tracker.statemachine.ApplicationStateMachine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +104,21 @@ public class ApplicationService {
         }
 
         applicationRepository.delete(application);
+    }
+
+    @Transactional
+    public ApplicationResponse updateStatus(UUID userId, UUID applicationId, ApplicationStatus newStatus) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
+
+        if (!application.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        ApplicationStateMachine.validate(application.getStatus(), newStatus);
+        application.setStatus(newStatus);
+
+        return applicationMapper.toResponse(applicationRepository.save(application));
     }
 
     private Set<Tag> resolveTags(Set<UUID> tagIds, UUID userId) {

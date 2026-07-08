@@ -1,27 +1,22 @@
-# Week 01 — [Theme]
+# Week 01 — Foundations
 
-**Dates:** _start_ → _end_
-**Planned hours:** ~10-15
-**Actual hours:** _fill in_
+**Dates:** 06 Jul → ...
+**Actual hours:** ~4
 
-## What I built
-- 
+---
 
-## What I learned (be specific — this is interview material)
-- 
+## Day 1 — 06 Jul
 
-## What confused me / took longer than expected
-- 
+### What I built
+- Spring Boot 3.5 project, Postgres in Docker, Flyway migration, 6 JPA entities mapped
 
-## Decisions made and why (tradeoffs)
--  e.g. "Chose Specifications over QueryDSL for filtering because ___"
+### What slowed me down
+- Port conflict between local Postgres and Docker — diagnosed with `lsof -i :5432`
+- Bash 3 on Mac blocking SDKMAN install
+- Spring Boot silently hijacking Docker Compose with its own credentials
 
-## If an interviewer asked me about this week's work, I'd say:
-> 
+### If an interviewer asked
+> "I debugged a silent port conflict using `lsof` — local Postgres was intercepting connections meant for the Docker container."
 
-## Status vs plan
-- [ ] On track
-- [ ] Slipped — what got cut or pushed: 
-
-## Next week's focus
-- 
+### Next session
+- Repositories + first custom query
