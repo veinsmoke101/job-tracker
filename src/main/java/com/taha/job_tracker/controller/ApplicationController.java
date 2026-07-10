@@ -3,6 +3,7 @@ package com.taha.job_tracker.controller;
 import com.taha.job_tracker.dto.ApplicationRequest;
 import com.taha.job_tracker.dto.ApplicationResponse;
 import com.taha.job_tracker.entity.ApplicationStatus;
+import com.taha.job_tracker.security.SecurityUtils;
 import com.taha.job_tracker.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,45 +23,45 @@ public class ApplicationController {
 
     @PostMapping
     public ResponseEntity<ApplicationResponse> create(
-            @Valid @RequestBody ApplicationRequest request,
-            @RequestHeader("X-User-Id") UUID userId) {
+            @Valid @RequestBody ApplicationRequest request) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(applicationService.create(userId, request));
     }
 
     @GetMapping
-    public ResponseEntity<List<ApplicationResponse>> getAll(
-            @RequestHeader("X-User-Id") UUID userId) {
+    public ResponseEntity<List<ApplicationResponse>> getAll() {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(applicationService.getAllByUser(userId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApplicationResponse> getById(
-            @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID userId) {
+            @PathVariable UUID id) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(applicationService.getById(userId, id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApplicationResponse> update(
             @PathVariable UUID id,
-            @Valid @RequestBody ApplicationRequest request,
-            @RequestHeader("X-User-Id") UUID userId) {
+            @Valid @RequestBody ApplicationRequest request) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(applicationService.update(userId, id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID userId) {
+            @PathVariable UUID id) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         applicationService.delete(userId, id);
         return ResponseEntity.noContent().build();
     }
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApplicationResponse> updateStatus(
             @PathVariable UUID id,
-            @RequestParam ApplicationStatus status,
-            @RequestHeader("X-User-Id") UUID userId) {
+            @RequestParam ApplicationStatus status) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(applicationService.updateStatus(userId, id, status));
     }
 }

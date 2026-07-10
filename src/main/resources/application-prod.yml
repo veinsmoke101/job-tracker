@@ -1,0 +1,8 @@
+spring:
+  jpa:
+    show-sql: false
+
+app:
+  jwt:
+    access-token-expiry: 900000
+    refresh-token-expiry: 604800000
